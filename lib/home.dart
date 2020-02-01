@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_clone/utils/colors.dart';
 
+import 'package:flutter_clock_clone/pages/alarm_page.dart';
+import 'package:flutter_clock_clone/pages/clock_page.dart';
+import 'package:flutter_clock_clone/pages/timer_page.dart';
+import 'package:flutter_clock_clone/pages/stopwatch_page.dart';
+
+
 class MyHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -100,50 +106,6 @@ class TabBarItem extends StatelessWidget {
           Text(text),
         ],
       ),
-    );
-  }
-}
-
-
-class AlarmPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints.expand(),
-      color: Colors.red,
-    );
-  }
-}
-
-
-class ClockPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints.expand(),
-      color: Colors.green,
-    );
-  }
-}
-
-
-class TimerPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints.expand(),
-      color: Colors.blue,
-    );
-  }
-}
-
-
-class StopwatchPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints.expand(),
-      color: Colors.yellow,
     );
   }
 }
