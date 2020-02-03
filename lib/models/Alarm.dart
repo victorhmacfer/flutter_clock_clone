@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class Alarm {
 
-  int scheduledTime;
+  int scheduledHour;
+  int scheduledMinute;
   bool repeats;
   bool isEnabled;
   List<bool> repeatDays;
@@ -11,8 +12,10 @@ class Alarm {
   bool vibrates;
   String label;
 
+  // choosing defaults in model.. couldve put them in addNewAlarm method.
   Alarm({
-    @required this.scheduledTime,
+    @required this.scheduledHour,
+    @required this.scheduledMinute,
      this.repeats = false,
      this.isEnabled = true,
      this.repeatDays = const [true, true, true, true, true, true, true], //days of the week

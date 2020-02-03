@@ -1,11 +1,25 @@
 
+import 'dart:async';
+
 import 'package:flutter_clock_clone/blocs/bloc_base.dart';
+import 'package:flutter_clock_clone/models/Alarm.dart';
 
 class AlarmBloc implements BlocBase {
 
-  //stream of List<Alarm>
+  StreamController<List<Alarm>> _alarmListController = StreamController.broadcast();
 
-  // addNewAlarm()
+  Stream<List<Alarm>> get alarmListStream => _alarmListController.stream;
+
+  List<Alarm> _alarms = [];
+
+
+  void addNewAlarm(int hour, int minute) {
+    _alarms.add(Alarm(
+      scheduledHour: hour,
+      scheduledMinute: minute
+    ));
+    _alarmListController.sink.add(_alarms);
+  }
 
 
 
@@ -19,7 +33,7 @@ class AlarmBloc implements BlocBase {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _alarmListController.close();
   }
 
 
