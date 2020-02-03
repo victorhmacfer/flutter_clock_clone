@@ -6,49 +6,46 @@ import 'package:flutter_clock_clone/pages/clock_page.dart';
 import 'package:flutter_clock_clone/pages/timer_page.dart';
 import 'package:flutter_clock_clone/pages/stopwatch_page.dart';
 
-
 class MyHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     var media = MediaQuery.of(context).size;
 
     return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        backgroundColor: appBackgroundBlack,
-        appBar: ColoredTabBar(
-          color: appTabBarGray,
-          height: media.height * 0.10,
-          tabBar: TabBar( 
-            labelPadding: EdgeInsets.symmetric(horizontal: 0),  // overriding the default padding for tab labels
-            indicatorColor: appBlue,
-            labelColor: appBlue,
-            unselectedLabelColor: appIconGray,
-            tabs: <Widget>[
-              TabBarItem.alarm(),
-              TabBarItem.clock(),
-              TabBarItem.timer(),
-              TabBarItem.stopwatch(),
+        length: 4,
+        child: Scaffold(
+          backgroundColor: appBackgroundBlack,
+          appBar: ColoredTabBar(
+            color: appTabBarGray,
+            height: media.height * 0.10,
+            tabBar: TabBar(
+              labelPadding: EdgeInsets.symmetric(
+                  horizontal:
+                      0), // overriding the default padding for tab labels
+              indicatorColor: appBlue,
+              labelColor: appBlue,
+              unselectedLabelColor: appIconGray,
+              tabs: <Widget>[
+                TabBarItem.alarm(),
+                TabBarItem.clock(),
+                TabBarItem.timer(),
+                TabBarItem.stopwatch(),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: <Widget>[
+              AlarmPage(),
+              ClockPage(),
+              TimerPage(),
+              StopwatchPage(),
             ],
           ),
-        ),
-        body: TabBarView(
-          children: <Widget>[
-            AlarmPage(),
-            ClockPage(),
-            TimerPage(),
-            StopwatchPage(),
-
-          ],
-        ),
-      )
-    );
+        ));
   }
 }
 
 class ColoredTabBar extends Container implements PreferredSizeWidget {
-
   final Color color;
   final TabBar tabBar;
   final double height;
@@ -68,7 +65,10 @@ class ColoredTabBar extends Container implements PreferredSizeWidget {
         children: <Widget>[
           Flexible(child: tabBar),
           IconButton(
-            icon: Icon(Icons.more_vert, color: appIconGray,),
+            icon: Icon(
+              Icons.more_vert,
+              color: appIconGray,
+            ),
             onPressed: () {
               print('clickei no overflow menu da tabBar');
             },

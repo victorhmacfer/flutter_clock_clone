@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       // statusBarColor: appTabBarGray,
-      statusBarColor: Color.fromARGB(0, 230, 15, 45),
+      statusBarColor: Color.fromARGB(0, 230, 15, 45),  //TODO: this is a bug
     ));
 
 

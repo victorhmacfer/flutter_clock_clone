@@ -5,7 +5,7 @@ const appTabBarGray = Color.fromARGB(255, 42, 43, 47);
 
 const appIconGray = Color.fromARGB(255, 189, 192, 197);
 
-const appBackgroundBlack = Color.fromARGB(255, 42, 43, 47);
+const appBackgroundBlack = Color.fromARGB(255, 32, 33, 37);
 
 const appBlue = Color.fromARGB(255, 139, 179, 249);
 
