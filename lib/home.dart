@@ -79,8 +79,6 @@ class ColoredTabBar extends Container implements PreferredSizeWidget {
   }
 }
 
-//TODO: strings not internationalized
-//TODO: change timer icon to correct one.. an hourglass
 class TabBarItem extends StatelessWidget {
   final Icon icon;
   final String text;

@@ -5,22 +5,20 @@ import 'package:flutter_clock_clone/models/Alarm.dart';
 import 'package:flutter_clock_clone/utils/colors.dart';
 import 'package:provider/provider.dart';
 
-//TODO: list items are not radio !  Implement that later.
-//TODO: fix dimensions everywhere
 class AlarmPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var alarmBloc = Provider.of<AlarmBloc>(context);
 
     return Scaffold(
-          body: Container(
-            color: appBackgroundBlack,
-            constraints: BoxConstraints.expand(),
-            child: MyAlarmListView(alarmBloc),
-          ),
-          floatingActionButton: _alarmFab(context, alarmBloc),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        );
+      body: Container(
+        color: appBackgroundBlack,
+        constraints: BoxConstraints.expand(),
+        child: MyAlarmListView(alarmBloc),
+      ),
+      floatingActionButton: _alarmFab(context, alarmBloc),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 }
 
@@ -36,23 +34,19 @@ FloatingActionButton _alarmFab(BuildContext myContext, AlarmBloc theBloc) {
       );
 
       if (selectedTime != null) {
-        print('The time is ${selectedTime.hour}:${selectedTime.minute}');
         theBloc.addNewAlarm(selectedTime.hour, selectedTime.minute);
       }
     },
   );
 }
 
-//TODO: implement splash effect on clicking..
-//TODO: hardcoded and dummy strings
 class ExpandableItem extends StatefulWidget {
+  final String scheduledTime;
+  final Alarm theAlarm;
 
-  String scheduledTime;
-  Alarm theAlarm;
-  
-  ExpandableItem(this.theAlarm) {
-    scheduledTime = '${(theAlarm.scheduledHour < 10) ? '0': ''}${theAlarm.scheduledHour}:${(theAlarm.scheduledMinute < 10) ? '0': ''}${theAlarm.scheduledMinute}';
-  }
+  ExpandableItem(this.theAlarm)
+      : scheduledTime =
+            '${(theAlarm.scheduledTime.hour < 10) ? '0' : ''}${theAlarm.scheduledTime.hour}:${(theAlarm.scheduledTime.minute < 10) ? '0' : ''}${theAlarm.scheduledTime.minute}';
 
   @override
   _ExpandableItemState createState() => _ExpandableItemState();
@@ -68,58 +62,98 @@ class _ExpandableItemState extends State<ExpandableItem> {
     );
   }
 
-  Widget _bottomPart(bool isExpanded) {
+  //TODO: have a textstyle  and copy with fontColor changing on isEnabled.
+  Widget _topPart(bool isEnabled, AlarmBloc theBloc) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(widget.scheduledTime),
+        Switch(
+            value: widget.theAlarm.isEnabled,
+            onChanged: (newValue) {
+              theBloc.setAlarmEnabledStatus(newValue, widget.theAlarm);
+            })
+      ],
+    );
+  }
+
+  Widget _repeatDaysRow(
+      bool repeats, List<bool> repeatDaysBitmap, AlarmBloc myBloc) {
+    return Visibility(
+      visible: repeats,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          CircleAvatar(
+            radius: 16,
+            child: Text('S'),
+            backgroundColor: (repeatDaysBitmap[0]
+                ? appWhite
+                : appDisabledAlarmRepeatDayBackground),
+          ),
+          CircleAvatar(
+            radius: 16,
+            child: Text('M'),
+            backgroundColor: (repeatDaysBitmap[1]
+                ? appWhite
+                : appDisabledAlarmRepeatDayBackground),
+          ),
+          CircleAvatar(
+            radius: 16,
+            child: Text('T'),
+            backgroundColor: (repeatDaysBitmap[2]
+                ? appWhite
+                : appDisabledAlarmRepeatDayBackground),
+          ),
+          CircleAvatar(
+            radius: 16,
+            child: Text('W'),
+            backgroundColor: (repeatDaysBitmap[3]
+                ? appWhite
+                : appDisabledAlarmRepeatDayBackground),
+          ),
+          CircleAvatar(
+            radius: 16,
+            child: Text('T'),
+            backgroundColor: (repeatDaysBitmap[4]
+                ? appWhite
+                : appDisabledAlarmRepeatDayBackground),
+          ),
+          CircleAvatar(
+            radius: 16,
+            child: Text('F'),
+            backgroundColor: (repeatDaysBitmap[5]
+                ? appWhite
+                : appDisabledAlarmRepeatDayBackground),
+          ),
+          CircleAvatar(
+            radius: 16,
+            child: Text('S'),
+            backgroundColor: (repeatDaysBitmap[6]
+                ? appWhite
+                : appDisabledAlarmRepeatDayBackground),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _bottomPart(bool isExpanded, AlarmBloc theBloc) {
     if (isExpanded) {
       return Column(
         children: <Widget>[
           Row(
             children: <Widget>[
-              Checkbox(value: false, onChanged: (checked) {}),
+              Checkbox(
+                  value: widget.theAlarm.repeats,
+                  onChanged: (newValue) {
+                    theBloc.setAlarmRepeatStatus(newValue, widget.theAlarm);
+                  }),
               Text('Repeat')
             ],
           ),
-          Visibility(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 16,
-                  child: Text('S'),
-                  backgroundColor: appWhite,
-                ),
-                CircleAvatar(
-                  radius: 16,
-                  child: Text('M'),
-                  backgroundColor: appWhite,
-                ),
-                CircleAvatar(
-                  radius: 16,
-                  child: Text('T'),
-                  backgroundColor: appWhite,
-                ),
-                CircleAvatar(
-                  radius: 16,
-                  child: Text('W'),
-                  backgroundColor: appWhite,
-                ),
-                CircleAvatar(
-                  radius: 16,
-                  child: Text('T'),
-                  backgroundColor: appWhite,
-                ),
-                CircleAvatar(
-                  radius: 16,
-                  child: Text('F'),
-                  backgroundColor: appWhite,
-                ),
-                CircleAvatar(
-                  radius: 16,
-                  child: Text('S'),
-                  backgroundColor: appWhite,
-                ),
-              ],
-            ),
-          ),
+          _repeatDaysRow(
+              widget.theAlarm.repeats, widget.theAlarm.repeatDays, theBloc),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -132,7 +166,7 @@ class _ExpandableItemState extends State<ExpandableItem> {
               Row(
                 children: <Widget>[
                   Checkbox(value: false, onChanged: (checked) {}),
-                  Text('Repeat')
+                  Text('Vibrate')
                 ],
               ),
             ],
@@ -186,28 +220,9 @@ class _ExpandableItemState extends State<ExpandableItem> {
     );
   }
 
-  //TODO: have a textstyle  and copy with fontColor changing on isEnabled.
-  Widget _topPart(bool isEnabled, AlarmBloc theBloc) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(widget.scheduledTime), 
-        Switch(
-          value: widget.theAlarm.isEnabled, 
-          onChanged: (newValue) {
-            theBloc.setAlarmEnabledStatus(newValue, widget.theAlarm);
-          }
-        )
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-
     var alarmBloc = Provider.of<AlarmBloc>(context);
-
-    double tileHeight;
 
     return InkWell(
       onTap: () {
@@ -223,9 +238,8 @@ class _ExpandableItemState extends State<ExpandableItem> {
             Container(
               child: _topPart(false, alarmBloc),
             ),
-
             Container(
-              child: _bottomPart(expanded),
+              child: _bottomPart(expanded, alarmBloc),
             ),
           ],
         ),
@@ -234,21 +248,15 @@ class _ExpandableItemState extends State<ExpandableItem> {
   }
 }
 
-
-
-// ListView with radio-like expandable items.
 class MyAlarmListView extends StatelessWidget {
-
   final AlarmBloc alarmBloc;
 
   MyAlarmListView(this.alarmBloc);
-
 
   Widget _buildItem(Alarm alarm) => ExpandableItem(alarm);
 
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder<List<Alarm>>(
         stream: alarmBloc.alarmListStream,
         builder: (context, snapshot) {
