@@ -3,7 +3,6 @@ import 'package:flutter_clock_clone/blocs/alarm_bloc.dart';
 import 'package:flutter_clock_clone/models/Alarm.dart';
 
 import 'package:flutter_clock_clone/utils/colors.dart';
-import 'package:flutter_clock_clone/blocs/bloc_base.dart';
 import 'package:provider/provider.dart';
 
 //TODO: list items are not radio !  Implement that later.
@@ -49,20 +48,10 @@ FloatingActionButton _alarmFab(BuildContext myContext, AlarmBloc theBloc) {
 class ExpandableItem extends StatefulWidget {
 
   String scheduledTime;
-  bool enabled;
-  bool repeats;
-  String ringtone;
-  bool vibrates;
-  String label;
-
-  ExpandableItem(Alarm theAlarm) {
-    var alarmScheduledHour = theAlarm.scheduledHour;
-    scheduledTime = '${(alarmScheduledHour < 10) ? '0': ''}${theAlarm.scheduledHour}:${theAlarm.scheduledMinute}';
-    enabled = theAlarm.isEnabled;
-    repeats = theAlarm.repeats;
-    ringtone = theAlarm.ringtone;
-    vibrates = theAlarm.vibrates;
-    label = theAlarm.label;
+  Alarm theAlarm;
+  
+  ExpandableItem(this.theAlarm) {
+    scheduledTime = '${(theAlarm.scheduledHour < 10) ? '0': ''}${theAlarm.scheduledHour}:${(theAlarm.scheduledMinute < 10) ? '0': ''}${theAlarm.scheduledMinute}';
   }
 
   @override
@@ -198,15 +187,26 @@ class _ExpandableItemState extends State<ExpandableItem> {
   }
 
   //TODO: have a textstyle  and copy with fontColor changing on isEnabled.
-  Widget _topPart(bool isEnabled) {
+  Widget _topPart(bool isEnabled, AlarmBloc theBloc) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[Text('04:19'), Switch(value: false, onChanged: null)],
+      children: <Widget>[
+        Text(widget.scheduledTime), 
+        Switch(
+          value: widget.theAlarm.isEnabled, 
+          onChanged: (newValue) {
+            theBloc.setAlarmEnabledStatus(newValue, widget.theAlarm);
+          }
+        )
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
+
+    var alarmBloc = Provider.of<AlarmBloc>(context);
+
     double tileHeight;
 
     return InkWell(
@@ -221,8 +221,8 @@ class _ExpandableItemState extends State<ExpandableItem> {
         child: Column(
           children: <Widget>[
             Container(
-              child: _topPart(false),
-            ), //TODO: come back here
+              child: _topPart(false, alarmBloc),
+            ),
 
             Container(
               child: _bottomPart(expanded),

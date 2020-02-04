@@ -21,12 +21,10 @@ class AlarmBloc implements BlocBase {
     _alarmListController.sink.add(_alarms);
   }
 
-
-
-
-
-
-
+  void setAlarmEnabledStatus(bool newValue, Alarm alarm) {
+    alarm.isEnabled = newValue;
+    _alarmListController.sink.add(_alarms);
+  }
 
 
 
