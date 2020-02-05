@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_clone/utils/colors.dart';
+import 'package:flutter_clock_clone/utils/dimensions.dart';
 
 import 'package:flutter_clock_clone/pages/alarm_page.dart';
 import 'package:flutter_clock_clone/pages/clock_page.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_clock_clone/pages/stopwatch_page.dart';
 class MyHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var media = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.of(context).size;
 
     return DefaultTabController(
         length: 4,
@@ -17,12 +18,13 @@ class MyHome extends StatelessWidget {
           backgroundColor: appBackgroundBlack,
           appBar: ColoredTabBar(
             color: appTabBarGray,
-            height: media.height * 0.10,
+            height: screenSize.width * tabBarHeightSF,
             tabBar: TabBar(
-              labelPadding: EdgeInsets.symmetric(
-                  horizontal:
-                      0), // overriding the default padding for tab labels
+              labelPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+              indicatorWeight: 3,
               indicatorColor: appBlue,
+              indicatorPadding: EdgeInsets.symmetric(horizontal: 16),
+              
               labelColor: appBlue,
               unselectedLabelColor: appIconGray,
               tabs: <Widget>[
@@ -59,7 +61,7 @@ class ColoredTabBar extends Container implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 24),
+      padding: EdgeInsets.only(top: 16), //TODO: this is hardcoded..
       color: color,
       child: Row(
         children: <Widget>[
@@ -98,9 +100,12 @@ class TabBarItem extends StatelessWidget {
     return Container(
       constraints: BoxConstraints.expand(),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          icon,
+          Padding(
+            padding: EdgeInsets.only(top: 9), //TODO: this is hardcoded
+            child: icon,
+          ),
           Text(text),
         ],
       ),

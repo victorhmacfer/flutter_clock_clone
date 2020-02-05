@@ -18,3 +18,5 @@ const appWhite = Colors.white;
 const appAlarmNumberGray = Color.fromARGB(255, 134, 139, 145);
 
 const appAlarmSubtitleGray = Color.fromARGB(255, 121, 126, 132);
+
+const appTransparent = Color.fromARGB(0, 50, 50, 50);
