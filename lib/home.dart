@@ -72,7 +72,7 @@ class ColoredTabBar extends Container implements PreferredSizeWidget {
               color: appIconGray,
             ),
             onPressed: () {
-              print('clickei no overflow menu da tabBar');
+              
             },
           )
         ],

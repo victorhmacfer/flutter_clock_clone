@@ -9,7 +9,6 @@ import 'package:flutter_clock_clone/blocs/alarm_bloc.dart';
 import 'package:flutter_clock_clone/utils/dimensions.dart';
 
 
-
 class AlarmListItem extends StatefulWidget {
   final String scheduledTime;
   final Alarm theAlarm;
@@ -57,7 +56,6 @@ class _AlarmListItemState extends State<AlarmListItem> {
 
   //TODO: have a textstyle  and copy with fontColor changing on isEnabled.
   Widget _topPart(bool isEnabled, AlarmBloc theBloc, Size screenSize) {
-    print('Im inside topPart.. the screenSize is $screenSize');
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clock_clone/utils/scrolling_behavior.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_clock_clone/blocs/alarm_bloc.dart';
 import 'package:flutter_clock_clone/models/Alarm.dart';
 import 'package:flutter_clock_clone/utils/colors.dart';
 import 'package:flutter_clock_clone/custom_widgets/alarm_list_item.dart';
-
 
 class AlarmPage extends StatelessWidget {
   @override
@@ -26,26 +26,30 @@ class AlarmPage extends StatelessWidget {
 
 Widget _alarmListView(AlarmBloc alarmBloc) {
   return StreamBuilder<List<Alarm>>(
-        stream: alarmBloc.alarmListStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data.isNotEmpty) {
-              return ListView(
-                children: snapshot.data.map((Alarm alarm) => AlarmListItem(alarm)).toList(),
-              );
-            }
-
-            return Center(
-              child: Text('No Alarms.'),
+      stream: alarmBloc.alarmListStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data.isNotEmpty) {
+            return ScrollConfiguration(
+              behavior: NoMaterialGlowBehavior(),
+              child: ListView(
+                children: snapshot.data
+                    .map((Alarm alarm) => AlarmListItem(alarm))
+                    .toList(),
+              ),
             );
           }
 
           return Center(
-            child: CircularProgressIndicator(),
+            child: Text('No Alarms.'),
           );
-        });
-}
+        }
 
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      });
+}
 
 FloatingActionButton _alarmFab(BuildContext myContext, AlarmBloc theBloc) {
   return FloatingActionButton(
@@ -64,7 +68,3 @@ FloatingActionButton _alarmFab(BuildContext myContext, AlarmBloc theBloc) {
     },
   );
 }
-
-
-
-
