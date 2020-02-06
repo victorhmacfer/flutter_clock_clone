@@ -6,5 +6,6 @@ const alarmScheduledTimeStyle = TextStyle(
 );
 
 const alarmItemTextStyle = TextStyle(
-  color: appWhite
+  color: appWhite,
+  fontWeight: FontWeight.w600
 );

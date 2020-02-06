@@ -8,7 +8,6 @@ import 'package:flutter_clock_clone/blocs/alarm_bloc.dart';
 
 import 'package:flutter_clock_clone/utils/dimensions.dart';
 
-
 class AlarmListItem extends StatefulWidget {
   final String scheduledTime;
   final Alarm theAlarm;
@@ -36,18 +35,15 @@ class _AlarmListItemState extends State<AlarmListItem> {
         });
       },
       child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: screenSize.width * alarmItemHorizontalPaddingSF, 
-          vertical: screenSize.width * alarmItemVerticalPaddingSF),
+        padding: EdgeInsets.only(
+            left: screenSize.width * alarmItemHorizontalPaddingSF,
+            right: screenSize.width * alarmItemHorizontalPaddingSF,
+            top: screenSize.width * alarmItemTopPaddingSF),
         color: (expanded) ? appTabBarGray : appBackgroundBlack,
         child: Column(
           children: <Widget>[
-            Container(
-              child: _topPart(false, alarmBloc, screenSize),
-            ),
-            Container(
-              child: _bottomPart(expanded, alarmBloc, screenSize),
-            ),
+            _topPart(false, alarmBloc, screenSize),
+            _bottomPart(expanded, alarmBloc, screenSize),
           ],
         ),
       ),
@@ -56,24 +52,27 @@ class _AlarmListItemState extends State<AlarmListItem> {
 
   //TODO: have a textstyle  and copy with fontColor changing on isEnabled.
   Widget _topPart(bool isEnabled, AlarmBloc theBloc, Size screenSize) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(
-          widget.scheduledTime, 
-          style: alarmScheduledTimeStyle.copyWith(
-            fontSize: screenSize.width * alarmNumberFontSizeSF,
-            color: (widget.theAlarm.isEnabled) ? appBlue : appAlarmNumberGray,
-          )),
-        Switch(
-          activeColor: appBlue,
-          inactiveThumbColor: appIconGray,
-          inactiveTrackColor: appIconGray.withOpacity(0.5),
-          value: widget.theAlarm.isEnabled,
-          onChanged: (newValue) {
-            theBloc.setAlarmEnabledStatus(newValue, widget.theAlarm);
-          })
-      ],
+    return Container(
+      //color: Colors.green,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(widget.scheduledTime,
+              style: alarmScheduledTimeStyle.copyWith(
+                fontSize: screenSize.width * alarmNumberFontSizeSF,
+                color:
+                    (widget.theAlarm.isEnabled) ? appBlue : appAlarmNumberGray,
+              )),
+          Switch(
+              activeColor: appBlue,
+              inactiveThumbColor: appIconGray,
+              inactiveTrackColor: appIconGray.withOpacity(0.5),
+              value: widget.theAlarm.isEnabled,
+              onChanged: (newValue) {
+                theBloc.setAlarmEnabledStatus(newValue, widget.theAlarm);
+              })
+        ],
+      ),
     );
   }
 
@@ -83,66 +82,151 @@ class _AlarmListItemState extends State<AlarmListItem> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Checkbox(
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                activeColor: appTransparent,  // affects square border too !
-                checkColor: appWhite,
-                  value: widget.theAlarm.repeats,
-                  onChanged: (newValue) {
-                    theBloc.setAlarmRepeatStatus(newValue, widget.theAlarm);
-                  }),
-              Text('Repeat', style: alarmItemTextStyle,)
+              Container(
+                // color: Colors.red,
+                child: Theme(
+                  //TODO: PERSONAL WARNING: THIS IS HACKING, AND A DUPLICATED ONE !!!
+                  data: ThemeData(unselectedWidgetColor: appWhite),
+                  child: Checkbox(
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      activeColor:
+                          appTransparent, // affects square border too !
+                      checkColor: appWhite,
+                      value: widget.theAlarm.repeats,
+                      onChanged: (newValue) {
+                        theBloc.setAlarmRepeatStatus(newValue, widget.theAlarm);
+                      }),
+                ),
+              ),
+              Text(
+                'Repeat',
+                style: alarmItemTextStyle,
+              )
             ],
           ),
-          _repeatDaysRow(
-              widget.theAlarm.repeats, widget.theAlarm.repeatDays, theBloc),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Icon(Icons.notification_important, color: appWhite,),
-                  Text('Default (Morning Glory)', style: alarmItemTextStyle,),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Checkbox(value: false, onChanged: (checked) {}),
-                  Text('Vibrate', style: alarmItemTextStyle,)
-                ],
-              ),
-            ],
+          _repeatDaysRow(widget.theAlarm.repeats, widget.theAlarm.repeatDays,
+              theBloc, screenSize),
+          Padding(
+            padding: EdgeInsets.only(bottom: 8), //TODO: hardcoded dimension
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                          right:
+                              screenSize.width * alarmItemIconRightPaddingSF),
+                      child: Icon(
+                        Icons.notification_important,
+                        color: appWhite,
+                      ),
+                    ),
+                    Text(
+                      'Default (Morning Glory)',
+                      style: alarmItemTextStyle,
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Theme(
+                      //TODO: PERSONAL WARNING: THIS IS HACKING, AND A DUPLICATED ONE !!!
+                      data: ThemeData(unselectedWidgetColor: appWhite),
+                      child: Checkbox(
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          activeColor:
+                              appTransparent, // affects square border too !
+                          checkColor: appWhite,
+                          value: widget.theAlarm.vibrates,
+                          onChanged: (checked) {
+                            
+                          }),
+                    ),
+                    Text(
+                      'Vibrate',
+                      style: alarmItemTextStyle,
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
-          Row(
-            children: <Widget>[
-              Icon(Icons.label_outline, color: appWhite,),
-              Text('Label'),
-            ],
+          Padding(
+            padding: EdgeInsets.only(bottom: screenSize.width * 0.04),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(
+                      right: screenSize.width * alarmItemIconRightPaddingSF),
+                  child: Icon(
+                    Icons.label_outline,
+                    color: appWhite,
+                  ),
+                ),
+                Text(
+                  'Label',
+                  style: alarmItemTextStyle.copyWith(color: appAlarmNumberGray),
+                ),
+              ],
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Icon(Icons.notification_important),
-                  Text('blablabla'),
-                ],
-              ),
-              Icon(Icons.help_outline, color: appWhite,),
-            ],
+          Padding(
+            padding: EdgeInsets.only(bottom: screenSize.width * 0.045),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                          right:
+                              screenSize.width * alarmItemIconRightPaddingSF),
+                      child: Icon(Icons.notification_important),
+                    ),
+                    Text('blablabla'),
+                  ],
+                ),
+                Icon(
+                  Icons.help_outline,
+                  color: appWhite,
+                ),
+              ],
+            ),
           ),
-          _divider(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Icon(Icons.delete_forever, color: appWhite,),
-                  Text('Delete', style: alarmItemTextStyle,),
-                ],
-              ),
-              IconButton(icon: Icon(Icons.expand_less), color: appWhite, onPressed: () {}),
-            ],
+          Padding(
+            padding: EdgeInsets.only(bottom: screenSize.width * 0.025),
+            child: _divider(),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: screenSize.width * 0.02),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                          right:
+                              screenSize.width * alarmItemIconRightPaddingSF),
+                      child: Icon(
+                        Icons.delete_forever,
+                        color: appWhite,
+                      ),
+                    ),
+                    Text(
+                      'Delete',
+                      style: alarmItemTextStyle,
+                    ),
+                  ],
+                ),
+                IconButton(
+                    icon: Icon(Icons.expand_less),
+                    color: appWhite,
+                    onPressed: () {}),
+              ],
+            ),
           ),
         ],
       );
@@ -153,8 +237,17 @@ class _AlarmListItemState extends State<AlarmListItem> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('Tomorrow', style: alarmItemTextStyle.copyWith(color: (widget.theAlarm.isEnabled) ? appWhite : appAlarmNumberGray),),
-            IconButton(icon: Icon(Icons.expand_more), color: appWhite, onPressed: () {})
+            Text(
+              'Tomorrow',
+              style: alarmItemTextStyle.copyWith(
+                  color: (widget.theAlarm.isEnabled)
+                      ? appWhite
+                      : appAlarmNumberGray),
+            ),
+            IconButton(
+                icon: Icon(Icons.expand_more),
+                color: appWhite,
+                onPressed: () {})
           ],
         ),
         _divider()
@@ -162,63 +255,66 @@ class _AlarmListItemState extends State<AlarmListItem> {
     );
   }
 
-  Widget _repeatDaysRow(
-      bool repeats, List<bool> repeatDaysBitmap, AlarmBloc myBloc) {
+  Widget _repeatDaysRow(bool repeats, List<bool> repeatDaysBitmap,
+      AlarmBloc myBloc, Size screenSize) {
     return Visibility(
       visible: repeats,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          CircleAvatar(
-            radius: 16,
-            child: Text('S'),
-            backgroundColor: (repeatDaysBitmap[0]
-                ? appWhite
-                : appDisabledAlarmRepeatDayBackground),
-          ),
-          CircleAvatar(
-            radius: 16,
-            child: Text('M'),
-            backgroundColor: (repeatDaysBitmap[1]
-                ? appWhite
-                : appDisabledAlarmRepeatDayBackground),
-          ),
-          CircleAvatar(
-            radius: 16,
-            child: Text('T'),
-            backgroundColor: (repeatDaysBitmap[2]
-                ? appWhite
-                : appDisabledAlarmRepeatDayBackground),
-          ),
-          CircleAvatar(
-            radius: 16,
-            child: Text('W'),
-            backgroundColor: (repeatDaysBitmap[3]
-                ? appWhite
-                : appDisabledAlarmRepeatDayBackground),
-          ),
-          CircleAvatar(
-            radius: 16,
-            child: Text('T'),
-            backgroundColor: (repeatDaysBitmap[4]
-                ? appWhite
-                : appDisabledAlarmRepeatDayBackground),
-          ),
-          CircleAvatar(
-            radius: 16,
-            child: Text('F'),
-            backgroundColor: (repeatDaysBitmap[5]
-                ? appWhite
-                : appDisabledAlarmRepeatDayBackground),
-          ),
-          CircleAvatar(
-            radius: 16,
-            child: Text('S'),
-            backgroundColor: (repeatDaysBitmap[6]
-                ? appWhite
-                : appDisabledAlarmRepeatDayBackground),
-          ),
-        ],
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: screenSize.width * 0.025),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            CircleAvatar(
+              radius: screenSize.width * 0.035,
+              child: Text('S'),
+              backgroundColor: (repeatDaysBitmap[0]
+                  ? appWhite
+                  : appDisabledAlarmRepeatDayBackground),
+            ),
+            CircleAvatar(
+              radius: screenSize.width * 0.035,
+              child: Text('M'),
+              backgroundColor: (repeatDaysBitmap[1]
+                  ? appWhite
+                  : appDisabledAlarmRepeatDayBackground),
+            ),
+            CircleAvatar(
+              radius: screenSize.width * 0.035,
+              child: Text('T'),
+              backgroundColor: (repeatDaysBitmap[2]
+                  ? appWhite
+                  : appDisabledAlarmRepeatDayBackground),
+            ),
+            CircleAvatar(
+              radius: screenSize.width * 0.035,
+              child: Text('W'),
+              backgroundColor: (repeatDaysBitmap[3]
+                  ? appWhite
+                  : appDisabledAlarmRepeatDayBackground),
+            ),
+            CircleAvatar(
+              radius: screenSize.width * 0.035,
+              child: Text('T'),
+              backgroundColor: (repeatDaysBitmap[4]
+                  ? appWhite
+                  : appDisabledAlarmRepeatDayBackground),
+            ),
+            CircleAvatar(
+              radius: screenSize.width * 0.035,
+              child: Text('F'),
+              backgroundColor: (repeatDaysBitmap[5]
+                  ? appWhite
+                  : appDisabledAlarmRepeatDayBackground),
+            ),
+            CircleAvatar(
+              radius: screenSize.width * 0.035,
+              child: Text('S'),
+              backgroundColor: (repeatDaysBitmap[6]
+                  ? appWhite
+                  : appDisabledAlarmRepeatDayBackground),
+            ),
+          ],
+        ),
       ),
     );
   }
