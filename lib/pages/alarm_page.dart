@@ -45,9 +45,7 @@ Widget _alarmListView(AlarmBloc alarmBloc) {
           );
         }
 
-        return Center(
-          child: CircularProgressIndicator(),
-        );
+        return Container();
       });
 }
 
