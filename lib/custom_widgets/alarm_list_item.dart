@@ -80,34 +80,36 @@ class _AlarmListItemState extends State<AlarmListItem> {
     if (isExpanded) {
       return Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Container(
-                // color: Colors.red,
-                child: Theme(
-                  //TODO: PERSONAL WARNING: THIS IS HACKING, AND A DUPLICATED ONE !!!
-                  data: ThemeData(unselectedWidgetColor: appWhite),
-                  child: Checkbox(
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      activeColor:
-                          appTransparent, // affects square border too !
-                      checkColor: appWhite,
-                      value: widget.theAlarm.repeats,
-                      onChanged: (newValue) {
-                        theBloc.setAlarmRepeatStatus(newValue, widget.theAlarm);
-                      }),
+          Padding(
+            padding: EdgeInsets.only(top: screenSize.width * 0.02),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  child: Theme(
+                    //TODO: PERSONAL WARNING: THIS IS HACKING, AND A DUPLICATED ONE !!!
+                    data: ThemeData(unselectedWidgetColor: appWhite),
+                    child: Checkbox(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        activeColor:
+                            appTransparent, // affects square border too !
+                        checkColor: appWhite,
+                        value: widget.theAlarm.repeats,
+                        onChanged: (newValue) {
+                          theBloc.setAlarmRepeatStatus(newValue, widget.theAlarm);
+                        }),
+                  ),
                 ),
-              ),
-              Text(
-                'Repeat',
-                style: alarmItemTextStyle,
-              )
-            ],
+                Text(
+                  'Repeat',
+                  style: alarmItemTextStyle,
+                )
+              ],
+            ),
           ),
           _repeatDaysRow(widget.theAlarm.repeats, widget.theAlarm.repeatDays,
               theBloc, screenSize),
           Padding(
-            padding: EdgeInsets.only(bottom: 8), //TODO: hardcoded dimension
+            padding: EdgeInsets.only(bottom: screenSize.width * 0.035), //TODO: hardcoded dimension
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -257,6 +259,9 @@ class _AlarmListItemState extends State<AlarmListItem> {
 
   Widget _repeatDaysRow(bool repeats, List<bool> repeatDaysBitmap,
       AlarmBloc myBloc, Size screenSize) {
+
+    var avatarRadiusScalingFactor = 0.038;
+    var avatarTextScalingFactor = 0.045;
     return Visibility(
       visible: repeats,
       child: Container(
@@ -265,50 +270,50 @@ class _AlarmListItemState extends State<AlarmListItem> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             CircleAvatar(
-              radius: screenSize.width * 0.035,
-              child: Text('S'),
+              radius: screenSize.width * avatarRadiusScalingFactor,
+              child: Text('S', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
               backgroundColor: (repeatDaysBitmap[0]
                   ? appWhite
                   : appDisabledAlarmRepeatDayBackground),
             ),
             CircleAvatar(
-              radius: screenSize.width * 0.035,
-              child: Text('M'),
+              radius: screenSize.width * avatarRadiusScalingFactor,
+              child: Text('M', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
               backgroundColor: (repeatDaysBitmap[1]
                   ? appWhite
                   : appDisabledAlarmRepeatDayBackground),
             ),
             CircleAvatar(
-              radius: screenSize.width * 0.035,
-              child: Text('T'),
+              radius: screenSize.width * avatarRadiusScalingFactor,
+              child: Text('T', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
               backgroundColor: (repeatDaysBitmap[2]
                   ? appWhite
                   : appDisabledAlarmRepeatDayBackground),
             ),
             CircleAvatar(
-              radius: screenSize.width * 0.035,
-              child: Text('W'),
+              radius: screenSize.width * avatarRadiusScalingFactor,
+              child: Text('W', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
               backgroundColor: (repeatDaysBitmap[3]
                   ? appWhite
                   : appDisabledAlarmRepeatDayBackground),
             ),
             CircleAvatar(
-              radius: screenSize.width * 0.035,
-              child: Text('T'),
+              radius: screenSize.width * avatarRadiusScalingFactor,
+              child: Text('T', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
               backgroundColor: (repeatDaysBitmap[4]
                   ? appWhite
                   : appDisabledAlarmRepeatDayBackground),
             ),
             CircleAvatar(
-              radius: screenSize.width * 0.035,
-              child: Text('F'),
+              radius: screenSize.width * avatarRadiusScalingFactor,
+              child: Text('F', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
               backgroundColor: (repeatDaysBitmap[5]
                   ? appWhite
                   : appDisabledAlarmRepeatDayBackground),
             ),
             CircleAvatar(
-              radius: screenSize.width * 0.035,
-              child: Text('S'),
+              radius: screenSize.width * avatarRadiusScalingFactor,
+              child: Text('S', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
               backgroundColor: (repeatDaysBitmap[6]
                   ? appWhite
                   : appDisabledAlarmRepeatDayBackground),

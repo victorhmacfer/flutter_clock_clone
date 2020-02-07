@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clock_clone/utils/colors.dart';
 
 const alarmScheduledTimeStyle = TextStyle(
-  color: appAlarmNumberGray
+  color: appAlarmNumberGray,
+  fontFamily: 'Lato',
+  letterSpacing: 2
 );
 
 const alarmItemTextStyle = TextStyle(
   color: appWhite,
+  fontWeight: FontWeight.w600
+);
+
+const alarmItemCircleAvatarStyle = TextStyle(
+  color: appTabBarGray,
   fontWeight: FontWeight.w600
 );

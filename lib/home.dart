@@ -20,10 +20,10 @@ class MyHome extends StatelessWidget {
             color: appTabBarGray,
             height: screenSize.width * tabBarHeightSF,
             tabBar: TabBar(
-              labelPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+              labelPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8), //TODO: hardcoded dimension
               indicatorWeight: 3,
               indicatorColor: appBlue,
-              indicatorPadding: EdgeInsets.symmetric(horizontal: 16),
+              indicatorPadding: EdgeInsets.symmetric(horizontal: 16),  //TODO: hardcoded dimension
               
               labelColor: appBlue,
               unselectedLabelColor: appIconGray,
