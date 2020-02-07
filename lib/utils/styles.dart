@@ -13,6 +13,5 @@ const alarmItemTextStyle = TextStyle(
 );
 
 const alarmItemCircleAvatarStyle = TextStyle(
-  color: appTabBarGray,
   fontWeight: FontWeight.w600
 );

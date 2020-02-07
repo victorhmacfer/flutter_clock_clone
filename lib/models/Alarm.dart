@@ -14,16 +14,12 @@ class Alarm {
       {@required this.scheduledTime,
       this.repeats = false,
       this.isEnabled = true,
-      this.repeatDays = const [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ], //days of the week
+      
       this.ringtone = "Morning Glory",
       this.vibrates = true,
-      this.label = ""});
+      this.label = ""}) {
+
+        this.repeatDays = [true, true, true, true, true, true, true];
+
+      }
 }

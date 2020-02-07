@@ -95,7 +95,8 @@ class _AlarmListItemState extends State<AlarmListItem> {
                         checkColor: appWhite,
                         value: widget.theAlarm.repeats,
                         onChanged: (newValue) {
-                          theBloc.setAlarmRepeatStatus(newValue, widget.theAlarm);
+                          theBloc.setAlarmRepeatStatus(
+                              newValue, widget.theAlarm);
                         }),
                   ),
                 ),
@@ -106,10 +107,10 @@ class _AlarmListItemState extends State<AlarmListItem> {
               ],
             ),
           ),
-          _repeatDaysRow(widget.theAlarm.repeats, widget.theAlarm.repeatDays,
-              theBloc, screenSize),
+          _repeatDaysRow(widget.theAlarm, theBloc, screenSize),
           Padding(
-            padding: EdgeInsets.only(bottom: screenSize.width * 0.035), //TODO: hardcoded dimension
+            padding: EdgeInsets.only(
+                bottom: screenSize.width * 0.035), //TODO: hardcoded dimension
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -142,9 +143,7 @@ class _AlarmListItemState extends State<AlarmListItem> {
                               appTransparent, // affects square border too !
                           checkColor: appWhite,
                           value: widget.theAlarm.vibrates,
-                          onChanged: (checked) {
-                            
-                          }),
+                          onChanged: (checked) {}),
                     ),
                     Text(
                       'Vibrate',
@@ -257,68 +256,29 @@ class _AlarmListItemState extends State<AlarmListItem> {
     );
   }
 
-  Widget _repeatDaysRow(bool repeats, List<bool> repeatDaysBitmap,
-      AlarmBloc myBloc, Size screenSize) {
-
-    var avatarRadiusScalingFactor = 0.038;
-    var avatarTextScalingFactor = 0.045;
+  Widget _repeatDaysRow(Alarm theAlarm, AlarmBloc myBloc, Size screenSize) {
     return Visibility(
-      visible: repeats,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: screenSize.width * 0.025),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            CircleAvatar(
-              radius: screenSize.width * avatarRadiusScalingFactor,
-              child: Text('S', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
-              backgroundColor: (repeatDaysBitmap[0]
-                  ? appWhite
-                  : appDisabledAlarmRepeatDayBackground),
-            ),
-            CircleAvatar(
-              radius: screenSize.width * avatarRadiusScalingFactor,
-              child: Text('M', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
-              backgroundColor: (repeatDaysBitmap[1]
-                  ? appWhite
-                  : appDisabledAlarmRepeatDayBackground),
-            ),
-            CircleAvatar(
-              radius: screenSize.width * avatarRadiusScalingFactor,
-              child: Text('T', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
-              backgroundColor: (repeatDaysBitmap[2]
-                  ? appWhite
-                  : appDisabledAlarmRepeatDayBackground),
-            ),
-            CircleAvatar(
-              radius: screenSize.width * avatarRadiusScalingFactor,
-              child: Text('W', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
-              backgroundColor: (repeatDaysBitmap[3]
-                  ? appWhite
-                  : appDisabledAlarmRepeatDayBackground),
-            ),
-            CircleAvatar(
-              radius: screenSize.width * avatarRadiusScalingFactor,
-              child: Text('T', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
-              backgroundColor: (repeatDaysBitmap[4]
-                  ? appWhite
-                  : appDisabledAlarmRepeatDayBackground),
-            ),
-            CircleAvatar(
-              radius: screenSize.width * avatarRadiusScalingFactor,
-              child: Text('F', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
-              backgroundColor: (repeatDaysBitmap[5]
-                  ? appWhite
-                  : appDisabledAlarmRepeatDayBackground),
-            ),
-            CircleAvatar(
-              radius: screenSize.width * avatarRadiusScalingFactor,
-              child: Text('S', style: alarmItemCircleAvatarStyle.copyWith(fontSize: screenSize.width * avatarTextScalingFactor),),
-              backgroundColor: (repeatDaysBitmap[6]
-                  ? appWhite
-                  : appDisabledAlarmRepeatDayBackground),
-            ),
-          ],
+      visible: theAlarm.repeats,
+      // this GD is here to catch taps that miss the avatars so the item doesnt
+      // collapse due to the outer GD (alarm item)
+      child: GestureDetector(
+        onTap: () {},
+        child: Container(
+          color:
+              appTabBarGray, //This color is here cuz the GD doesnt work for containers without colors.. idk why.
+          padding: EdgeInsets.symmetric(vertical: screenSize.width * 0.025),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              MyCustomCircleAvatar(screenSize, 'S', 0, myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'M', 1, myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'T', 2, myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'W', 3, myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'T', 4, myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'F', 5, myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'S', 6, myBloc, theAlarm),
+            ],
+          ),
         ),
       ),
     );
@@ -328,6 +288,41 @@ class _AlarmListItemState extends State<AlarmListItem> {
     return Container(
       height: 1,
       color: appDividerGray,
+    );
+  }
+}
+
+class MyCustomCircleAvatar extends StatelessWidget {
+  final Size screenSize;
+  final String text;
+  final int index;
+  final AlarmBloc bloc;
+  final Alarm alarm;
+
+  MyCustomCircleAvatar(
+      this.screenSize, this.text, this.index, this.bloc, this.alarm);
+
+  @override
+  Widget build(BuildContext context) {
+    var avatarRadiusScalingFactor = 0.038;
+    var avatarTextScalingFactor = 0.045;
+
+    return GestureDetector(
+      onTap: () {
+        bloc.setAlarmRepeatDay(!alarm.repeatDays[index], alarm, index);
+      },
+      child: CircleAvatar(
+        radius: screenSize.width * avatarRadiusScalingFactor,
+        child: Text(
+          text,
+          style: alarmItemCircleAvatarStyle.copyWith(
+              fontSize: screenSize.width * avatarTextScalingFactor,
+              color: (alarm.repeatDays[index]) ? appTabBarGray : appIconGray),
+        ),
+        backgroundColor: (alarm.repeatDays[index]
+            ? appWhite
+            : appDisabledAlarmRepeatDayBackground),
+      ),
     );
   }
 }
