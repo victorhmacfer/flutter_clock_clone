@@ -9,11 +9,11 @@ import 'package:flutter_clock_clone/blocs/alarm_bloc.dart';
 import 'package:flutter_clock_clone/utils/dimensions.dart';
 
 class AlarmListItem extends StatefulWidget {
-  final String scheduledTime;
+  final String scheduledTimeText;
   final Alarm theAlarm;
 
   AlarmListItem(this.theAlarm)
-      : scheduledTime =
+      : scheduledTimeText =
             '${(theAlarm.scheduledTime.hour < 10) ? '0' : ''}${theAlarm.scheduledTime.hour}:${(theAlarm.scheduledTime.minute < 10) ? '0' : ''}${theAlarm.scheduledTime.minute}';
 
   @override
@@ -42,7 +42,7 @@ class _AlarmListItemState extends State<AlarmListItem> {
         color: (expanded) ? appTabBarGray : appBackgroundBlack,
         child: Column(
           children: <Widget>[
-            _topPart(false, alarmBloc, screenSize),
+            _topPart(context, false, alarmBloc, screenSize),
             _bottomPart(expanded, alarmBloc, screenSize),
           ],
         ),
@@ -51,18 +51,33 @@ class _AlarmListItemState extends State<AlarmListItem> {
   }
 
   //TODO: have a textstyle  and copy with fontColor changing on isEnabled.
-  Widget _topPart(bool isEnabled, AlarmBloc theBloc, Size screenSize) {
+  Widget _topPart(BuildContext myContext, bool isEnabled, AlarmBloc theBloc, Size screenSize) {
     return Container(
       //color: Colors.green,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(widget.scheduledTime,
-              style: alarmScheduledTimeStyle.copyWith(
-                fontSize: screenSize.width * alarmNumberFontSizeSF,
-                color:
-                    (widget.theAlarm.isEnabled) ? appBlue : appAlarmNumberGray,
-              )),
+          Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              onTap: () async {
+                var selectedTime = await showTimePicker(
+                context: myContext,
+                initialTime: TimeOfDay.fromDateTime(widget.theAlarm.scheduledTime),
+                );
+                if (selectedTime != null) {
+                  theBloc.setAlarmScheduledTime(selectedTime.hour, selectedTime.minute, widget.theAlarm);
+                }
+              },
+              child: Text(widget.scheduledTimeText,
+                  style: alarmScheduledTimeStyle.copyWith(
+                    fontSize: screenSize.width * alarmNumberFontSizeSF,
+                    color: (widget.theAlarm.isEnabled)
+                        ? appBlue
+                        : appAlarmNumberGray,
+                  )),
+            ),
+          ),
           Switch(
               activeColor: appBlue,
               inactiveThumbColor: appIconGray,
@@ -114,22 +129,30 @@ class _AlarmListItemState extends State<AlarmListItem> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(
-                          right:
-                              screenSize.width * alarmItemIconRightPaddingSF),
-                      child: Icon(
-                        Icons.notification_important,
-                        color: appWhite,
-                      ),
+                Material(
+                  type: MaterialType.transparency,
+                  child: InkWell(
+                    onTap: () {
+                      print('I clicked default morning');
+                    },
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(
+                              right: screenSize.width *
+                                  alarmItemIconRightPaddingSF),
+                          child: Icon(
+                            Icons.notification_important,
+                            color: appWhite,
+                          ),
+                        ),
+                        Text(
+                          'Default (Morning Glory)',
+                          style: alarmItemTextStyle,
+                        ),
+                      ],
                     ),
-                    Text(
-                      'Default (Morning Glory)',
-                      style: alarmItemTextStyle,
-                    ),
-                  ],
+                  ),
                 ),
                 Row(
                   children: <Widget>[
@@ -154,23 +177,32 @@ class _AlarmListItemState extends State<AlarmListItem> {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(bottom: screenSize.width * 0.04),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(
-                      right: screenSize.width * alarmItemIconRightPaddingSF),
-                  child: Icon(
-                    Icons.label_outline,
-                    color: appWhite,
-                  ),
+          Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              onTap: () {
+                print('I clicked label');
+              },
+              child: Padding(
+                padding: EdgeInsets.only(bottom: screenSize.width * 0.04),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                          right: screenSize.width * alarmItemIconRightPaddingSF),
+                      child: Icon(
+                        Icons.label_outline,
+                        color: appWhite,
+                      ),
+                    ),
+                    Text(
+                      'Label',
+                      style:
+                          alarmItemTextStyle.copyWith(color: appAlarmNumberGray),
+                    ),
+                  ],
                 ),
-                Text(
-                  'Label',
-                  style: alarmItemTextStyle.copyWith(color: appAlarmNumberGray),
-                ),
-              ],
+              ),
             ),
           ),
           Padding(

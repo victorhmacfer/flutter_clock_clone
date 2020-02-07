@@ -34,6 +34,13 @@ class AlarmBloc implements BlocBase {
     _alarmListBehaviorSubject.add(_alarms);
   }
 
+  void setAlarmScheduledTime(int newHour, int newMinute, Alarm alarm) {
+    var now = DateTime.now();
+    alarm.scheduledTime = DateTime(now.year, now.month, now.day, newHour, newMinute);
+    _sortAlarmsList();
+    _alarmListBehaviorSubject.add(_alarms);
+  }
+
   void _sortAlarmsList() {
     _alarms.sort((a1, a2) => a1.scheduledTime.compareTo(a2.scheduledTime));
   }
