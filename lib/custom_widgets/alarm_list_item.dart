@@ -7,6 +7,7 @@ import 'package:flutter_clock_clone/utils/styles.dart';
 import 'package:flutter_clock_clone/blocs/alarm_bloc.dart';
 
 import 'package:flutter_clock_clone/utils/dimensions.dart';
+import 'package:vibration/vibration.dart';
 
 class AlarmListItem extends StatefulWidget {
   final String scheduledTimeText;
@@ -166,7 +167,14 @@ class _AlarmListItemState extends State<AlarmListItem> {
                               appTransparent, // affects square border too !
                           checkColor: appWhite,
                           value: widget.theAlarm.vibrates,
-                          onChanged: (checked) {}),
+                          onChanged: (newValue) async {
+                            theBloc.setAlarmVibrateStatus(newValue, widget.theAlarm);
+                            if (newValue) {
+                              if (await Vibration.hasVibrator()) {
+                                Vibration.vibrate(duration: 300);
+                              }
+                            }
+                          }),
                     ),
                     Text(
                       'Vibrate',

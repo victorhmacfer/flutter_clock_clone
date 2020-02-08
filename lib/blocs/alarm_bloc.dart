@@ -29,6 +29,11 @@ class AlarmBloc implements BlocBase {
     _alarmListBehaviorSubject.add(_alarms);
   }
 
+  void setAlarmVibrateStatus(bool newValue, Alarm alarm) {
+    alarm.vibrates = newValue;
+    _alarmListBehaviorSubject.add(_alarms);
+  }
+
   void setAlarmRepeatDay(bool newValue, Alarm alarm, int index) {
     alarm.repeatDays[index] = newValue;
     _alarmListBehaviorSubject.add(_alarms);
