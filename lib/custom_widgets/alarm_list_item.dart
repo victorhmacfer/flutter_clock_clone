@@ -52,7 +52,8 @@ class _AlarmListItemState extends State<AlarmListItem> {
   }
 
   //TODO: have a textstyle  and copy with fontColor changing on isEnabled.
-  Widget _topPart(BuildContext myContext, bool isEnabled, AlarmBloc theBloc, Size screenSize) {
+  Widget _topPart(BuildContext myContext, bool isEnabled, AlarmBloc theBloc,
+      Size screenSize) {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -62,11 +63,13 @@ class _AlarmListItemState extends State<AlarmListItem> {
             child: InkWell(
               onTap: () async {
                 var selectedTime = await showTimePicker(
-                context: myContext,
-                initialTime: TimeOfDay.fromDateTime(widget.theAlarm.scheduledTime),
+                  context: myContext,
+                  initialTime:
+                      TimeOfDay.fromDateTime(widget.theAlarm.scheduledTime),
                 );
                 if (selectedTime != null) {
-                  theBloc.setAlarmScheduledTime(selectedTime.hour, selectedTime.minute, widget.theAlarm);
+                  theBloc.setAlarmScheduledTime(
+                      selectedTime.hour, selectedTime.minute, widget.theAlarm);
                 }
               },
               child: Text(widget.scheduledTimeText,
@@ -167,7 +170,8 @@ class _AlarmListItemState extends State<AlarmListItem> {
                           checkColor: appWhite,
                           value: widget.theAlarm.vibrates,
                           onChanged: (newValue) async {
-                            theBloc.setAlarmVibrateStatus(newValue, widget.theAlarm);
+                            theBloc.setAlarmVibrateStatus(
+                                newValue, widget.theAlarm);
                             if (newValue) {
                               if (await Vibration.hasVibrator()) {
                                 Vibration.vibrate(duration: 300);
@@ -196,7 +200,8 @@ class _AlarmListItemState extends State<AlarmListItem> {
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(
-                          right: screenSize.width * alarmItemIconRightPaddingSF),
+                          right:
+                              screenSize.width * alarmItemIconRightPaddingSF),
                       child: Icon(
                         Icons.label_outline,
                         color: appWhite,
@@ -204,8 +209,8 @@ class _AlarmListItemState extends State<AlarmListItem> {
                     ),
                     Text(
                       'Label',
-                      style:
-                          alarmItemTextStyle.copyWith(color: appAlarmNumberGray),
+                      style: alarmItemTextStyle.copyWith(
+                          color: appAlarmNumberGray),
                     ),
                   ],
                 ),
@@ -244,27 +249,41 @@ class _AlarmListItemState extends State<AlarmListItem> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(
-                          right:
-                              screenSize.width * alarmItemIconRightPaddingSF),
-                      child: Icon(
-                        Icons.delete_forever,
-                        color: appWhite,
+                Material(
+                  type: MaterialType.transparency,
+                  child: InkWell(
+                    onTap: () {
+                      print('I clicked delete');
+                    },
+                    child: Container(
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                                right: screenSize.width *
+                                    alarmItemIconRightPaddingSF),
+                            child: Icon(
+                              Icons.delete_forever,
+                              color: appWhite,
+                            ),
+                          ),
+                          Text(
+                            'Delete',
+                            style: alarmItemTextStyle,
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      'Delete',
-                      style: alarmItemTextStyle,
-                    ),
-                  ],
+                  ),
                 ),
                 IconButton(
                     icon: Icon(Icons.expand_less),
                     color: appWhite,
-                    onPressed: () {}),
+                    onPressed: () {
+                      setState(() {
+                        expanded = !expanded;
+                      });
+                    }),
               ],
             ),
           ),
@@ -285,9 +304,13 @@ class _AlarmListItemState extends State<AlarmListItem> {
                       : appAlarmNumberGray),
             ),
             IconButton(
-                icon: Icon(Icons.expand_more),
+                icon: Icon(Icons.expand_less),
                 color: appWhite,
-                onPressed: () {})
+                onPressed: () {
+                  setState(() {
+                    expanded = !expanded;
+                  });
+                }),
           ],
         ),
         _divider()
@@ -295,16 +318,18 @@ class _AlarmListItemState extends State<AlarmListItem> {
     );
   }
 
-
   String _chooseSubtitleText(Alarm myAlarm) {
     var dateTime = myAlarm.scheduledTime;
 
     String alarmRepetitionText;
 
     if (!myAlarm.repeats) {
-      alarmRepetitionText = (dateTime.isAfter(DateTime.now())) ? 'Today' : 'Tomorrow';
+      alarmRepetitionText =
+          (dateTime.isAfter(DateTime.now())) ? 'Today' : 'Tomorrow';
     } else {
-      var repeatDays = myAlarm.repeatDays.keys.where((dayKey) => myAlarm.repeatDays[dayKey]).toList();
+      var repeatDays = myAlarm.repeatDays.keys
+          .where((dayKey) => myAlarm.repeatDays[dayKey])
+          .toList();
       if (repeatDays.length == 7) {
         return 'Every day';
       }
@@ -314,8 +339,6 @@ class _AlarmListItemState extends State<AlarmListItem> {
     }
     return alarmRepetitionText;
   }
-
-
 
   Widget _repeatDaysRow(Alarm theAlarm, AlarmBloc myBloc, Size screenSize) {
     return Visibility(
@@ -345,8 +368,6 @@ class _AlarmListItemState extends State<AlarmListItem> {
     );
   }
 
-
-
   Widget _divider() {
     return Container(
       height: 1,
@@ -354,9 +375,6 @@ class _AlarmListItemState extends State<AlarmListItem> {
     );
   }
 }
-
-
-
 
 class MyCustomCircleAvatar extends StatelessWidget {
   final Size screenSize;
