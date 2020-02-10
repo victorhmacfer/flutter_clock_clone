@@ -54,7 +54,6 @@ class _AlarmListItemState extends State<AlarmListItem> {
   //TODO: have a textstyle  and copy with fontColor changing on isEnabled.
   Widget _topPart(BuildContext myContext, bool isEnabled, AlarmBloc theBloc, Size screenSize) {
     return Container(
-      //color: Colors.green,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -279,7 +278,7 @@ class _AlarmListItemState extends State<AlarmListItem> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              'Tomorrow',
+              _chooseSubtitleText(widget.theAlarm),
               style: alarmItemTextStyle.copyWith(
                   color: (widget.theAlarm.isEnabled)
                       ? appWhite
@@ -296,6 +295,28 @@ class _AlarmListItemState extends State<AlarmListItem> {
     );
   }
 
+
+  String _chooseSubtitleText(Alarm myAlarm) {
+    var dateTime = myAlarm.scheduledTime;
+
+    String alarmRepetitionText;
+
+    if (!myAlarm.repeats) {
+      alarmRepetitionText = (dateTime.isAfter(DateTime.now())) ? 'Today' : 'Tomorrow';
+    } else {
+      var repeatDays = myAlarm.repeatDays.keys.where((dayKey) => myAlarm.repeatDays[dayKey]).toList();
+      if (repeatDays.length == 7) {
+        return 'Every day';
+      }
+      var buffer = StringBuffer();
+      buffer.writeAll(repeatDays, ", ");
+      alarmRepetitionText = buffer.toString();
+    }
+    return alarmRepetitionText;
+  }
+
+
+
   Widget _repeatDaysRow(Alarm theAlarm, AlarmBloc myBloc, Size screenSize) {
     return Visibility(
       visible: theAlarm.repeats,
@@ -310,19 +331,21 @@ class _AlarmListItemState extends State<AlarmListItem> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              MyCustomCircleAvatar(screenSize, 'S', 0, myBloc, theAlarm),
-              MyCustomCircleAvatar(screenSize, 'M', 1, myBloc, theAlarm),
-              MyCustomCircleAvatar(screenSize, 'T', 2, myBloc, theAlarm),
-              MyCustomCircleAvatar(screenSize, 'W', 3, myBloc, theAlarm),
-              MyCustomCircleAvatar(screenSize, 'T', 4, myBloc, theAlarm),
-              MyCustomCircleAvatar(screenSize, 'F', 5, myBloc, theAlarm),
-              MyCustomCircleAvatar(screenSize, 'S', 6, myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'S', 'Sun', myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'M', 'Mon', myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'T', 'Tue', myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'W', 'Wed', myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'T', 'Thu', myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'F', 'Fri', myBloc, theAlarm),
+              MyCustomCircleAvatar(screenSize, 'S', 'Sat', myBloc, theAlarm),
             ],
           ),
         ),
       ),
     );
   }
+
+
 
   Widget _divider() {
     return Container(
@@ -332,15 +355,18 @@ class _AlarmListItemState extends State<AlarmListItem> {
   }
 }
 
+
+
+
 class MyCustomCircleAvatar extends StatelessWidget {
   final Size screenSize;
   final String text;
-  final int index;
+  final String dayKey;
   final AlarmBloc bloc;
   final Alarm alarm;
 
   MyCustomCircleAvatar(
-      this.screenSize, this.text, this.index, this.bloc, this.alarm);
+      this.screenSize, this.text, this.dayKey, this.bloc, this.alarm);
 
   @override
   Widget build(BuildContext context) {
@@ -349,7 +375,7 @@ class MyCustomCircleAvatar extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        bloc.setAlarmRepeatDay(!alarm.repeatDays[index], alarm, index);
+        bloc.setAlarmRepeatDay(!alarm.repeatDays[dayKey], alarm, dayKey);
       },
       child: CircleAvatar(
         radius: screenSize.width * avatarRadiusScalingFactor,
@@ -357,9 +383,9 @@ class MyCustomCircleAvatar extends StatelessWidget {
           text,
           style: alarmItemCircleAvatarStyle.copyWith(
               fontSize: screenSize.width * avatarTextScalingFactor,
-              color: (alarm.repeatDays[index]) ? appTabBarGray : appIconGray),
+              color: (alarm.repeatDays[dayKey]) ? appTabBarGray : appIconGray),
         ),
-        backgroundColor: (alarm.repeatDays[index]
+        backgroundColor: (alarm.repeatDays[dayKey]
             ? appWhite
             : appDisabledAlarmRepeatDayBackground),
       ),

@@ -4,7 +4,7 @@ class Alarm {
   DateTime scheduledTime;
   bool repeats;
   bool isEnabled;
-  List<bool> repeatDays;
+  Map<String, bool> repeatDays;
   String ringtone;
   bool vibrates;
   String label;
@@ -14,12 +14,17 @@ class Alarm {
       {@required this.scheduledTime,
       this.repeats = false,
       this.isEnabled = true,
-      
       this.ringtone = "Morning Glory",
       this.vibrates = true,
       this.label = ""}) {
-
-        this.repeatDays = [true, true, true, true, true, true, true];
-
-      }
+    this.repeatDays = {
+      'Sun': true,
+      'Mon': true,
+      'Tue': true,
+      'Wed': true,
+      'Thu': true,
+      'Fri': true,
+      'Sat': true
+    };
+  }
 }
