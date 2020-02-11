@@ -34,6 +34,11 @@ class AlarmBloc implements BlocBase {
     _alarmListBehaviorSubject.add(_alarms);
   }
 
+  void setLabelText(String newText, Alarm alarm) {
+    alarm.label = newText;
+    _alarmListBehaviorSubject.add(_alarms);
+  }
+
   void setAlarmRepeatDay(bool newValue, Alarm alarm, String key) {
     alarm.repeatDays[key] = newValue;
     _alarmListBehaviorSubject.add(_alarms);

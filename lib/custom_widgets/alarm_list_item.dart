@@ -24,10 +24,27 @@ class AlarmListItem extends StatefulWidget {
 class _AlarmListItemState extends State<AlarmListItem> {
   bool expanded = false;
 
+  final TextEditingController labelTextController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // labelTextController.text =
+    //     'Label'; //This is hardcoded and NOT INTERNATIONALIZED text
+  }
+
+  @override
+  void dispose() {
+    labelTextController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var alarmBloc = Provider.of<AlarmBloc>(context);
     var screenSize = MediaQuery.of(context).size;
+
+    print('I got inside list item build');
 
     return InkWell(
       onTap: () {
@@ -44,7 +61,7 @@ class _AlarmListItemState extends State<AlarmListItem> {
         child: Column(
           children: <Widget>[
             _topPart(context, false, alarmBloc, screenSize),
-            _bottomPart(expanded, alarmBloc, screenSize),
+            _bottomPart(context, expanded, alarmBloc, screenSize),
           ],
         ),
       ),
@@ -94,7 +111,8 @@ class _AlarmListItemState extends State<AlarmListItem> {
     );
   }
 
-  Widget _bottomPart(bool isExpanded, AlarmBloc theBloc, Size screenSize) {
+  Widget _bottomPart(BuildContext myContext, bool isExpanded, AlarmBloc theBloc,
+      Size screenSize) {
     if (isExpanded) {
       return Column(
         children: <Widget>[
@@ -192,7 +210,54 @@ class _AlarmListItemState extends State<AlarmListItem> {
             type: MaterialType.transparency,
             child: InkWell(
               onTap: () {
-                print('I clicked label');
+                showDialog(
+                    context: myContext,
+                    builder: (context) {
+                      return AlertDialog(
+                        backgroundColor: appBackgroundBlack,
+                        contentPadding: EdgeInsets.fromLTRB(24, 24, 24, 0),
+                        content: SizedBox(
+                          width: screenSize.width * alarmLabelDialogWidthSF,
+                          child: TextField(
+                            style: TextStyle(color: appWhite),
+                            controller: labelTextController,
+                            cursorWidth: 1,
+                            cursorColor: appBlue,
+                            autofocus: true,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 16),
+                              labelText: 'Label',
+                              labelStyle: TextStyle(color: appBlue),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: appWhite, width: 2)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: appBlue, width: 2)),
+                            ),
+                          ),
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                            textColor: appBlue,
+                            child: Text('Cancel'),
+                            onPressed: () {
+                              Navigator.pop(myContext);
+                            },
+                          ),
+                          FlatButton(
+                            textColor: appBlue,
+                            child: Text('OK'),
+                            onPressed: () {
+                              theBloc.setLabelText(
+                                  labelTextController.text, widget.theAlarm);
+                              Navigator.pop(myContext);
+                            },
+                          ),
+                        ],
+                      );
+                    });
               },
               child: Padding(
                 padding: EdgeInsets.only(bottom: screenSize.width * 0.04),
@@ -207,11 +272,20 @@ class _AlarmListItemState extends State<AlarmListItem> {
                         color: appWhite,
                       ),
                     ),
-                    Text(
-                      'Label',
-                      style: alarmItemTextStyle.copyWith(
-                          color: appAlarmNumberGray),
+
+                    Expanded(
+                      child: TextField(
+                        controller: labelTextController,
+                        style: alarmItemTextStyle,
+                        decoration: InputDecoration.collapsed(
+                          hintText: 'Label',
+                          hintStyle: alarmItemTextStyle.copyWith(color: appAlarmNumberGray)),
+                        enabled: false,
+                        readOnly: true,
+                      ),
                     ),
+
+
                   ],
                 ),
               ),

@@ -9,7 +9,8 @@ const alarmScheduledTimeStyle = TextStyle(
 
 const alarmItemTextStyle = TextStyle(
   color: appWhite,
-  fontWeight: FontWeight.w600
+  fontWeight: FontWeight.w600,
+  fontSize: 14,
 );
 
 const alarmItemCircleAvatarStyle = TextStyle(
