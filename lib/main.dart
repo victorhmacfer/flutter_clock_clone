@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_clock_clone/blocs/alarm_bloc.dart';
 
 import 'package:flutter_clock_clone/home.dart';
+import 'package:flutter_clock_clone/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
@@ -10,6 +11,9 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: appTransparent));
+
 
 
     return MaterialApp(
