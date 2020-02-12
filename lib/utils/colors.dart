@@ -9,7 +9,7 @@ const appBackgroundBlack = Color.fromARGB(255, 32, 33, 37);
 
 const appBlue = Color.fromARGB(255, 139, 179, 249);
 
-const appDividerGray = Color.fromARGB(255, 53, 54, 58);
+const appDividerGray = Color.fromARGB(255, 58, 59, 63);
 
 const appDisabledAlarmRepeatDayBackground = Color.fromARGB(255, 59, 60, 62);
 

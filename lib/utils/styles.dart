@@ -16,3 +16,17 @@ const alarmItemTextStyle = TextStyle(
 const alarmItemCircleAvatarStyle = TextStyle(
   fontWeight: FontWeight.w600
 );
+
+const clockMainTimeStyle = TextStyle(
+  fontFamily: 'Lato',
+  color: appBlue,
+  fontSize: 70,
+  letterSpacing: 5
+);
+
+const clockCityTimeStyle = TextStyle(
+  fontFamily: 'Lato',
+  color: appWhite,
+  fontSize: 46,
+  letterSpacing: 5
+);
