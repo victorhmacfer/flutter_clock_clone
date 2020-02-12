@@ -13,8 +13,8 @@ class AlarmPage extends StatelessWidget {
     var alarmBloc = Provider.of<AlarmBloc>(context);
 
     return Scaffold(
+      backgroundColor: appBackgroundBlack,
       body: Container(
-        color: appBackgroundBlack,
         constraints: BoxConstraints.expand(),
         child: _alarmListView(alarmBloc),
       ),
